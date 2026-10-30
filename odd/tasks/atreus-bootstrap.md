@@ -181,3 +181,16 @@ harness from an interactive TUI into an always-on service.
   and the provider offers no correction transition for an approved candidate — so
   they ride along as the prose pass inside T4a, where those files get touched anyway
   for the branding strings. Nothing in slice 1 is reopened.
+- **L20** (delivery of slice 1, 2026-10-30): owner authorized push + first PR,
+  issue-first. `feat/atreus-bootstrap` pushed to `origin`; issue
+  [#1 "Atreus bootstrap slice 1: public identity and open-source posture"](https://github.com/leav-dev/atreus/issues/1)
+  created with `type:docs` + `status:approved`; PR
+  [#2](https://github.com/leav-dev/atreus/pull/2) opened against `main` with
+  `Closes #1` and exactly one type label (`type:docs`). Labels `type:docs`,
+  `type:chore` and `status:approved` did not exist on the fork and were created.
+  **Unverified:** no CI run exists for this branch. After ~3 minutes of polling,
+  `GET /actions/workflows` and `/actions/runs` both return `total_count: 0` and the PR
+  reports zero checks, even though `/actions/permissions` says `enabled: true` —
+  a fork needs Actions turned on in the UI before inherited workflows register, so
+  CI evidence is still owed by this slice. Verification stands on the local clean-env
+  suite (all three stages PASS) and the burned review receipt.
