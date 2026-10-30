@@ -48,7 +48,7 @@ harness from an interactive TUI into an always-on service.
 | T2 Write this bootstrap specification | S1-S5 | parent inline | `feat/atreus-bootstrap` commit for this file |
 | T3 Identity contract: `docs/identity.md` + `NOTICE.md` naming what Atreus owns (primary name, CLI, package, logo) and what stays external (`gentle-ai` provider, Pi), with the nominative "based on gentle-shell" wording | S4, S5, F1-F3 | parent inline | see Log L7 |
 | T4 Identity rename slice 1: rename only Atreus-owned surface (`package.json name`, `bin/atreus`, launcher, banner, docs front page) with tests alongside; keep `gentle-ai` provider paths untouched | S4, S5, F2, F3, L10 | `gentle-ai-worker` (background), surfaces `package.json`, `bin/**`, `lib/gentle-shell-launcher.ts`, `lib/gentle-shell-bundled.ts`, `extensions/startup-banner.ts`, `extensions/gentle-shell.ts` | pending — needs green baseline (job `pnpm test`) |
-| T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7 | parent inline first, then worker if the diff grows | pending |
+| T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7, L11 | parent inline | see Log L12 |
 | T6 Architecture decision record for the gateway: loopback HTTP + CLI client, one Pi SDK session per turn, session persistence keyed by conversation, ODD authorization layer as the guard | S2, S4, F4, F5 | parent inline (decision doc), worker for code later | pending |
 | T7 Walking skeleton: daemon that takes a loopback POST, runs one headless Pi SDK turn under the Atreus identity, returns the reply; deterministic test | S2, F4 | `gentle-ai-worker` after T6 | pending |
 
@@ -106,3 +106,19 @@ harness from an interactive TUI into an always-on service.
   Atreus identifies itself honestly in traffic or keeps the upstream UA for
   compatibility. Rename slice must keep a compatibility path for the old
   `npm:gentle-pi` specifier so existing installs still resolve.
+- **L11** (baseline evidence): `pnpm test` on the untouched fork at `3ee1d90` gave
+  `PASS provider-contract`, `PASS runtime-harness`, `FAIL unit-tests`. The unit
+  failure is an environment leak, not a fork defect: this session exports
+  `GENTLE_SHELL_CONFIG_HOME`, `GENTLE_PI_AGENT_HOME` and `PI_CODING_AGENT_DIR` to the
+  ambient gentle-shell home, and `tests/agent-home.test.ts:16` isolates only
+  `HOME`/`USERPROFILE`/`GENTLE_PI_CONFIG_HOME`, so `gentlePiConfigHome()` returned
+  `/home/sistmas/.gentle-shell/gentle-ai` where the test expected the temp config
+  home. With those variables unset, `tests/agent-home.test.ts` is green (6/6).
+  Consequence: any T4 verification must run in a clean env, and the caveat is
+  documented in `CONTRIBUTING.md`.
+- **L12** (2026-10-30, T5): README now opens with the Atreus identity, the
+  nominative provenance line required by S5, and a pointer that the inherited
+  gentle-shell surface below is upstream material for task T4. Added `SECURITY.md`
+  (report route, owned vs inherited supply chain, untrusted-inbound posture for the
+  gateway phase) and `CONTRIBUTING.md` (dev loop including the L11 env caveat, ODD
+  task-document convention, ~400-line review slices, identity boundaries).
