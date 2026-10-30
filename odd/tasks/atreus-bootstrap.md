@@ -47,8 +47,9 @@ harness from an interactive TUI into an always-on service.
 | T1 Seed the real GitHub fork of gentle-shell as public `leav-dev/atreus` | S3, S4 | parent (GitHub API) | none — fork created server-side; `origin/main` == upstream `3ee1d90`, 6510 commits, 87 tags |
 | T2 Write this bootstrap specification | S1-S5 | parent inline | `feat/atreus-bootstrap` commit for this file |
 | T3 Identity contract: `docs/identity.md` + `NOTICE.md` naming what Atreus owns (primary name, CLI, package, logo) and what stays external (`gentle-ai` provider, Pi), with the nominative "based on gentle-shell" wording | S4, S5, F1-F3 | parent inline | see Log L7 |
-| T4 Identity rename slice 1: rename only Atreus-owned surface (`package.json name`, `bin/atreus`, launcher, banner, docs front page) with tests alongside; keep `gentle-ai` provider paths untouched | S4, S5, F2, F3, L10 | `gentle-ai-worker` (background), surfaces `package.json`, `bin/**`, `lib/gentle-shell-launcher.ts`, `lib/gentle-shell-bundled.ts`, `extensions/startup-banner.ts`, `extensions/gentle-shell.ts` | pending — needs green baseline (job `pnpm test`) |
-| T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7, L11 | parent inline | see Log L12 |
+| T4a Branding slice: CLI help, banner and user-facing strings say Atreus while the package/npm identity stays `gentle-pi` | S4, S5, L15 | parent inline | blocked by L16 (slice budget) |
+| T4b Package/npm identity rename (`package.json.name`, bin entries, provider install target compat) | S4, S5, L15 | pending the publish decision | blocked: needs owner call on publishing `atreus` |
+| T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7, L11 | parent inline | done, see Log L12-L13 |
 | T6 Architecture decision record for the gateway: loopback HTTP + CLI client, one Pi SDK session per turn, session persistence keyed by conversation, ODD authorization layer as the guard | S2, S4, F4, F5 | parent inline (decision doc), worker for code later | pending |
 | T7 Walking skeleton: daemon that takes a loopback POST, runs one headless Pi SDK turn under the Atreus identity, returns the reply; deterministic test | S2, F4 | `gentle-ai-worker` after T6 | pending |
 
@@ -152,3 +153,7 @@ harness from an interactive TUI into an always-on service.
   across two names: a checkout that calls itself Atreus and a home where the
   provider drops upstream `gentle-pi`. The package-name rename therefore belongs
   with the publish decision, not with the branding slice.
+- **L16** (sequencing): slice 1 (identity contract + open-source hygiene) is at 399
+  authored lines, so it is already one reviewable unit and no room is left under the
+  ~400-line budget. T4a and everything after it wait for slice 1 to land (push/PR,
+  owner decision), rather than inflating one branch past reviewable size.
