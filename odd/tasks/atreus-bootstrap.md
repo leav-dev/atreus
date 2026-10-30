@@ -131,3 +131,24 @@ harness from an interactive TUI into an always-on service.
   passes 154/154 after the README change, which keeps the
   `docs/readme-reference.md` link asserted at `tests/gentle-ai.test.ts:937`.
   The full unit stage still fails in a clean env and is under diagnosis.
+- **L14** (baseline evidence, 2026-10-30): the clean-env unit stage is **green**.
+  `node --experimental-strip-types --test tests/*.test.ts` with
+  `GENTLE_SHELL_CONFIG_HOME`, `GENTLE_PI_AGENT_HOME`, `PI_CODING_AGENT_DIR`,
+  `GENTLE_SHELL_CHILD_PACKAGE_INJECTION`, `GENTLE_SHELL_USER_PI_HOME`,
+  `PI_SESSION_FILE` and `PI_SESSION_ID` unset: **7989 tests, 7910 pass, 0 fail, 79
+  skipped**, exit 0, in 181s. The `pnpm test` FAIL in the earlier clean-env run was
+  my own concurrent README edit landing mid-suite, not a fork defect. Conclusion:
+  the fork inherits a green baseline on this machine when the harness env is
+  stripped, so T4 can be judged against real evidence.
+- **L15** (finding, blocks the T4 package-name half): the `gentle-pi` string is not
+  only our product name, it is also the **provider's install target**. The fork's
+  own bundled-install detection resolves `node_modules/gentle-pi`
+  (`lib/gentle-shell-bundled.ts:113`), and the launcher both removes
+  `npm:gentle-pi` after the provider's setup
+  (`lib/gentle-shell-launcher.ts:659`) and tells the pinned provider to skip it
+  (`lib/gentle-shell-launcher.ts:676`). The pinned `gentle-ai` v4.3.1 binary still
+  installs the upstream `gentle-pi` Pi package into homes, so renaming
+  `package.json.name` to `atreus` without publishing `atreus` splits identity
+  across two names: a checkout that calls itself Atreus and a home where the
+  provider drops upstream `gentle-pi`. The package-name rename therefore belongs
+  with the publish decision, not with the branding slice.
