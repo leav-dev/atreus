@@ -194,3 +194,11 @@ harness from an interactive TUI into an always-on service.
   a fork needs Actions turned on in the UI before inherited workflows register, so
   CI evidence is still owed by this slice. Verification stands on the local clean-env
   suite (all three stages PASS) and the burned review receipt.
+- **L21** (CI evidence unblocked, 2026-10-30): the zero-workflow state was a fork
+  registration gap, not a permission denial. `PUT /repos/leav-dev/atreus/actions/permissions`
+  with a real JSON boolean (`{"enabled":true,"allowed_actions":"all",
+  "sha_pinned_actions_allowed":"enable_soon"}`) registered the 5 inherited workflows;
+  closing and reopening PR #2 then fired the `pull_request` event that produced the
+  runs (`Windows Hidden Internal Processes` 41084525698 completed **success**; `CI`
+  41084525573 watched to completion). Note the API quirk: `gh api -f enabled=true`
+  sends a string and 422s with "is not a boolean"; `--input` JSON is required.
