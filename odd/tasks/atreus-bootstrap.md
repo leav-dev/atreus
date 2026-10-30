@@ -47,7 +47,7 @@ harness from an interactive TUI into an always-on service.
 | T1 Seed the real GitHub fork of gentle-shell as public `leav-dev/atreus` | S3, S4 | parent (GitHub API) | none — fork created server-side; `origin/main` == upstream `3ee1d90`, 6510 commits, 87 tags |
 | T2 Write this bootstrap specification | S1-S5 | parent inline | `feat/atreus-bootstrap` commit for this file |
 | T3 Identity contract: `docs/identity.md` + `NOTICE.md` naming what Atreus owns (primary name, CLI, package, logo) and what stays external (`gentle-ai` provider, Pi), with the nominative "based on gentle-shell" wording | S4, S5, F1-F3 | parent inline | see Log L7 |
-| T4 Identity rename slice 1: rename only Atreus-owned surface (`package.json name`, `bin/atreus`, launcher, banner, docs front page) with tests alongside; keep `gentle-ai` provider paths untouched | S4, S5, F2, F3 | `gentle-ai-worker` (background), surfaces `package.json`, `bin/**`, `lib/gentle-shell-launcher.ts`, `runtime/**` | pending |
+| T4 Identity rename slice 1: rename only Atreus-owned surface (`package.json name`, `bin/atreus`, launcher, banner, docs front page) with tests alongside; keep `gentle-ai` provider paths untouched | S4, S5, F2, F3, L10 | `gentle-ai-worker` (background), surfaces `package.json`, `bin/**`, `lib/gentle-shell-launcher.ts`, `lib/gentle-shell-bundled.ts`, `extensions/startup-banner.ts`, `extensions/gentle-shell.ts` | pending — needs green baseline (job `pnpm test`) |
 | T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7 | parent inline first, then worker if the diff grows | pending |
 | T6 Architecture decision record for the gateway: loopback HTTP + CLI client, one Pi SDK session per turn, session persistence keyed by conversation, ODD authorization layer as the guard | S2, S4, F4, F5 | parent inline (decision doc), worker for code later | pending |
 | T7 Walking skeleton: daemon that takes a loopback POST, runs one headless Pi SDK turn under the Atreus identity, returns the reply; deterministic test | S2, F4 | `gentle-ai-worker` after T6 | pending |
@@ -92,3 +92,17 @@ harness from an interactive TUI into an always-on service.
 - **L9** (owner decision): persona stays `gentleman` for this phase — Atreus keeps
   the inherited voice and ships no Atreus-owned prompt layer yet. Identity work is
   product surface only (name, CLI, docs, provenance).
+- **L10** (finding, read-only pass before T4): the product identity `gentle-pi` is
+  wired in four places that must move together, or the fork breaks its own
+  install/update path:
+  `lib/gentle-shell-launcher.ts:594` (`npm:gentle-pi` source detection),
+  `lib/gentle-shell-launcher.ts:659` (`{ name: "gentle-pi", source: "npm:gentle-pi" }`
+  package declaration), `lib/gentle-shell-launcher.ts:676`
+  (`LAUNCHER_EXCLUDED_PI_PACKAGES`), `lib/gentle-shell-bundled.ts:113` (realpath
+  check for `node_modules/gentle-pi`), plus `bin/gentle-shell.mjs:1250,1260,2164`
+  (update source and declaration messaging).
+  `extensions/gentle-shell.ts:1708,1727` also send `User-Agent: gentle-pi` to model
+  providers — a network-visible identity string, so the fork must decide whether
+  Atreus identifies itself honestly in traffic or keeps the upstream UA for
+  compatibility. Rename slice must keep a compatibility path for the old
+  `npm:gentle-pi` specifier so existing installs still resolve.
