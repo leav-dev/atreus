@@ -80,3 +80,15 @@ harness from an interactive TUI into an always-on service.
   prompt comes from the external provider state (`~/.gentle-shell/gentle-ai/persona.json`,
   mode `gentleman`), which means a rename alone does not change how Atreus speaks —
   the "mentalidad" needs an Atreus-owned prompt layer or provider support.
+- **L8** (owner decision, verbatim): "vamos a usar por defecta una version
+  especifica, no pretendemos ir a la par de gs, podemos usar ahora la version mas
+  reciente gs". Disposition: Atreus pins one `gentle-ai` provider version and does
+  not ride upstream releases. The pin is already `INSTALLER_VERSION = "4.3.1"`
+  (`scripts/gentle-ai-installer.mjs:40`) with per-platform release digests frozen
+  in `GENTLE_AI_RELEASE_ASSETS` (`scripts/gentle-ai-installer.mjs:118`), and
+  upstream `v4.3.1` is the latest release today, so no version change was needed.
+  `scripts/verify-package-files.mjs:323` fails if `lib/gentle-ai-binary.ts` drifts
+  from the installer pin, so bumps stay explicit commits.
+- **L9** (owner decision): persona stays `gentleman` for this phase — Atreus keeps
+  the inherited voice and ships no Atreus-owned prompt layer yet. Identity work is
+  product surface only (name, CLI, docs, provenance).

@@ -68,13 +68,20 @@ forks, while permitting truthful nominative reference. Approved wording:
 
 Do not use upstream logos or brand assets as Atreus primary branding.
 
-## Open identity decisions
+## Identity decisions (resolved 2026-10-30)
 
-Tracked in `odd/tasks/atreus-bootstrap.md` (owner decision, blocking T6):
+Recorded in `odd/tasks/atreus-bootstrap.md` Log L8 and L9:
 
-- Whether Atreus keeps `gentle-ai` as its review/RDD provider, or treats native
-  review as optional and gates headless turns with its own policy layer.
-- Whether Atreus ships its own persona/system prompt. The injected orchestrator
-  prompt and persona come from the external provider, so a package-level rename
-  does not change how the assistant speaks: the "Atreus mindset" requires either
-  upstream persona support or an Atreus-owned prompt layer.
+- The `gentle-ai` Go provider stays required, **pinned to one explicit version per
+  fork** rather than tracking upstream releases. Today's pin is
+  `INSTALLER_VERSION = "4.3.1"` (`scripts/gentle-ai-installer.mjs:40`) with frozen
+  per-platform release digests (`scripts/gentle-ai-installer.mjs:118`);
+  `scripts/verify-package-files.mjs:323` fails if `lib/gentle-ai-binary.ts` drifts
+  from that pin, so every bump is a deliberate commit.
+- The persona stays `gentleman` for this phase: Atreus does not ship an
+  Atreus-owned orchestrator prompt yet, so identity work is product surface only
+  (name, CLI, docs, provenance) and never touches `persona.json` semantics.
+
+Still open for the gateway phase (T6): whether headless turns require the provider
+binary at all, since a VPS assistant that only does life-ops may run without
+native review installed.
