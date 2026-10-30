@@ -46,7 +46,7 @@ harness from an interactive TUI into an always-on service.
 | --- | --- | --- | --- |
 | T1 Seed the real GitHub fork of gentle-shell as public `leav-dev/atreus` | S3, S4 | parent (GitHub API) | none — fork created server-side; `origin/main` == upstream `3ee1d90`, 6510 commits, 87 tags |
 | T2 Write this bootstrap specification | S1-S5 | parent inline | `feat/atreus-bootstrap` commit for this file |
-| T3 Identity contract: `docs/identity.md` + `NOTICE.md` naming what Atreus owns (primary name, CLI, package, logo) and what stays external (`gentle-ai` provider, Pi), with the nominative "based on gentle-shell" wording | S4, S5 | parent inline (small, contract-only) | pending |
+| T3 Identity contract: `docs/identity.md` + `NOTICE.md` naming what Atreus owns (primary name, CLI, package, logo) and what stays external (`gentle-ai` provider, Pi), with the nominative "based on gentle-shell" wording | S4, S5, F1-F3 | parent inline | see Log L7 |
 | T4 Identity rename slice 1: rename only Atreus-owned surface (`package.json name`, `bin/atreus`, launcher, banner, docs front page) with tests alongside; keep `gentle-ai` provider paths untouched | S4, S5, F2, F3 | `gentle-ai-worker` (background), surfaces `package.json`, `bin/**`, `lib/gentle-shell-launcher.ts`, `runtime/**` | pending |
 | T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7 | parent inline first, then worker if the diff grows | pending |
 | T6 Architecture decision record for the gateway: loopback HTTP + CLI client, one Pi SDK session per turn, session persistence keyed by conversation, ODD authorization layer as the guard | S2, S4, F4, F5 | parent inline (decision doc), worker for code later | pending |
@@ -73,3 +73,10 @@ harness from an interactive TUI into an always-on service.
   phrasing. MIT license and upstream copyright notices stay in the tree.
 - **L6** (finding): the `gentle-ai` namespace is a provider contract, not a brand
   we can rename (F2, F3). Identity migration must scope to Atreus-owned surface.
+- **L7** (2026-10-30, T3 done): `docs/identity.md` + `NOTICE.md` committed on
+  `feat/atreus-bootstrap`. Two extra contract surfaces found while writing it:
+  `lib/gentle-shell-launcher.ts:593-595` detects `npm:gentle-pi` in Pi settings, so a
+  package rename needs a compatibility specifier; and the assistant persona/system
+  prompt comes from the external provider state (`~/.gentle-shell/gentle-ai/persona.json`,
+  mode `gentleman`), which means a rename alone does not change how Atreus speaks —
+  the "mentalidad" needs an Atreus-owned prompt layer or provider support.
