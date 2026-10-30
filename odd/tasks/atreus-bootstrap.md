@@ -157,3 +157,8 @@ harness from an interactive TUI into an always-on service.
   authored lines, so it is already one reviewable unit and no room is left under the
   ~400-line budget. T4a and everything after it wait for slice 1 to land (push/PR,
   owner decision), rather than inflating one branch past reviewable size.
+- **L17** (slice boundary, recorded at the 400-line crossing): **slice 1 = commits
+  `a1a688388..42700b6bc`** on `feat/atreus-bootstrap` (9 commits, 404 authored lines,
+  docs and repo policy only, no behavior change). Slice 2 onward starts from `main`
+  only after slice 1 has a delivery decision, and slice 2 is T4a (CLI/banner/help
+  strings, which also has to move the tests that assert them).
