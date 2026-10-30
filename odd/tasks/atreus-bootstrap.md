@@ -122,3 +122,12 @@ harness from an interactive TUI into an always-on service.
   (report route, owned vs inherited supply chain, untrusted-inbound posture for the
   gateway phase) and `CONTRIBUTING.md` (dev loop including the L11 env caveat, ODD
   task-document convention, ~400-line review slices, identity boundaries).
+- **L13** (repo settings observed, not assumed): `leav-dev/atreus` has Actions
+  enabled (`allowed_actions: all`) with **zero workflow runs so far** — CI evidence
+  waits for the first push. Issues were **disabled by default on the fork** and were
+  enabled. Private vulnerability reporting could not be enabled over the API
+  (`PUT /vulnerability_alerts` → 404), so `SECURITY.md` carries the report route.
+  `tests/agent-home.test.ts` passes 6/6 in a clean env; `tests/gentle-ai.test.ts`
+  passes 154/154 after the README change, which keeps the
+  `docs/readme-reference.md` link asserted at `tests/gentle-ai.test.ts:937`.
+  The full unit stage still fails in a clean env and is under diagnosis.
