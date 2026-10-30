@@ -162,3 +162,16 @@ harness from an interactive TUI into an always-on service.
   docs and repo policy only, no behavior change). Slice 2 onward starts from `main`
   only after slice 1 has a delivery decision, and slice 2 is T4a (CLI/banner/help
   strings, which also has to move the tests that assert them).
+- **L18** (native review of slice 1, approved and burned): assess read
+  `nativeRisk high` (`hot_path` security signal on `SECURITY.md`) with
+  `writerProfile large` from runtime, so this candidate earned a review. Ordinary
+  review ran the two lenses the change touched — `review-risk` and
+  `review-readability` — on tier high, frozen budget 200 correction lines over 409
+  changed lines, and closed **approved** on the last admitted event. Receipt: lineage
+  `review-ad6a163b0ca56f83`, target `sha256:364fe350…`, consumed revision
+  `sha256:0fca8144…`, acknowledgement `gentle-ai.review-acknowledged/v1`, authority
+  **burned**, delivery left to ordinary repository policy.
+  Four **advisory, non-blocking** findings stay as later work and must not reopen
+  this candidate: `NOTICE.md:8-10`, `SECURITY.md:9-11`, `CONTRIBUTING.md:23-24`
+  (readability WARNINGs) and `README.md:25` (SUGGESTION). They are wording/prose
+  items for the T4a documentation pass.
