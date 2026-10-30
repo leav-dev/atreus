@@ -1,5 +1,31 @@
 <a id="top"></a>
 
+# Atreus
+
+**Atreus** is an independent open-source project, based on
+[gentle-shell](https://github.com/Gentleman-Programming/gentle-shell). It is not
+official, sponsored, endorsed, certified, or partnered with gentle-shell or
+gentle-pi, which are marks of their owner — see [NOTICE.md](NOTICE.md) and
+[docs/identity.md](docs/identity.md).
+
+**Goal.** An agent that can actually do many things, running on your own hardware:
+promoted from a laptop to a VPS without changing what it is. The engineering
+discipline comes from gentle-shell — Organic Driven Development, scoped subagents,
+permission guards, risk-based native review — and the shape it is heading to is an
+always-on local gateway that owns sessions, tools, events and inbound messages,
+treats every inbound message as untrusted input, and runs each turn through the
+Pi SDK. That gateway is not built yet; the plan and current state live in
+[odd/tasks/atreus-bootstrap.md](odd/tasks/atreus-bootstrap.md).
+
+**Provenance.** Public fork of `Gentleman-Programming/gentle-shell` at upstream
+commit `3ee1d90` (2026-10-30), full history, MIT license retained.
+
+Everything below this line is the inherited gentle-shell product and documentation
+surface. It describes the code in this tree, invoked today as `gentle-shell`; the
+Atreus naming migration is tracked as task T4.
+
+---
+
 <div align="center">
   <img src="docs/assets/brand/gentle-shell-banner.gif" width="1200" alt="gentle-shell — Ecosystem, Agent, One shell">
 </div>

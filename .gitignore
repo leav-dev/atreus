@@ -32,5 +32,8 @@ progress.md
 meta-prompt.md
 tmp/
 
+# ODD scratch the test suite writes under the repo root
+odd/work/
+
 # CodeGraph index (recreated by pi on session start)
 .codegraph/
