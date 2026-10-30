@@ -175,3 +175,9 @@ harness from an interactive TUI into an always-on service.
   this candidate: `NOTICE.md:8-10`, `SECURITY.md:9-11`, `CONTRIBUTING.md:23-24`
   (readability WARNINGs) and `README.md:25` (SUGGESTION). They are wording/prose
   items for the T4a documentation pass.
+- **L19** (disposition of the advisory findings): the four items are wording-level
+  notes on the same four documents the slice added, admitted as non-blocking and
+  bound to this candidate. They are not correction work here — the receipt is burned
+  and the provider offers no correction transition for an approved candidate — so
+  they ride along as the prose pass inside T4a, where those files get touched anyway
+  for the branding strings. Nothing in slice 1 is reopened.
