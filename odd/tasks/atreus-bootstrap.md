@@ -50,7 +50,7 @@ harness from an interactive TUI into an always-on service.
 | T4a Branding slice: CLI help, banner and user-facing strings say Atreus while the package/npm identity stays `gentle-pi` | S4, S5, L15 | parent inline | blocked by L16 (slice budget) |
 | T4b Package/npm identity rename (`package.json.name`, bin entries, provider install target compat) | S4, S5, L15 | pending the publish decision | blocked: needs owner call on publishing `atreus` |
 | T5 Open-source hygiene: front README (states the fork provenance), `SECURITY.md` with "inbound messages are untrusted", `CONTRIBUTING.md`, issue templates kept, fork-safe CI | S1, F6, F7, L11 | parent inline | done, see Log L12-L13 |
-| T6 Architecture decision record for the gateway: loopback HTTP + CLI client, one Pi SDK session per turn, session persistence keyed by conversation, ODD authorization layer as the guard | S2, S4, F4, F5 | parent inline (decision doc), worker for code later | pending |
+| T6 Gateway ADR: loopback HTTP + CLI, one Pi SDK session per turn | S2, S4, F4, F5 | parent inline (decision doc) | drafted on branch `docs/gateway-adr` as `docs/adr/0001-gateway-runtime.md`, 125 lines, commit `dbf7413fe`; three open questions await the owner |
 | T7 Walking skeleton: daemon that takes a loopback POST, runs one headless Pi SDK turn under the Atreus identity, returns the reply; deterministic test | S2, F4 | `gentle-ai-worker` after T6 | pending |
 
 ## Log
@@ -202,3 +202,29 @@ harness from an interactive TUI into an always-on service.
   runs (`Windows Hidden Internal Processes` 41084525698 completed **success**; `CI`
   41084525573 watched to completion). Note the API quirk: `gh api -f enabled=true`
   sends a string and 422s with "is not a boolean"; `--input` JSON is required.
+- **L22** (T6 drafted): `docs/adr/0001-gateway-runtime.md` decides the gateway runtime
+  from F4/F5 plus Pi's own `docs/sdk.md`, `docs/cli-integration.md`, `docs/rpc.md` and
+  `docs/security.md`: one fresh `AgentSession` per turn against a persistent
+  `SessionManager` — not a resident session in the gateway, not an RPC child per
+  conversation — with gateway-owned admission where inbound text is data that never
+  authorizes mutation, loopback-only M1 transport, the pinned `gentle-ai` provider
+  required for code candidates but not for a read-only turn, and an honest isolation
+  default (dedicated OS user, container or VM as hardening, never privileged, remote
+  exposure never a config default). It records the rejected alternatives with reasons,
+  the consequences (turn-bootstrap latency must be measured by T7; the Pi session JSONL
+  becomes a contract Atreus versions; the harness's interactive-ask assumption needs an
+  explicit headless policy), and three open questions for the owner: package location
+  (`gateway/` workspace package vs top-level `daemon/` next to `bin/`), concurrent turns
+  for one conversation (queue vs reject), and which policy replaces interactive
+  permission prompts while unattended. It sits on `docs/gateway-adr`, stacked on this
+  branch, so its own diff stays 125 lines instead of pushing PR #2 past the budget.
+- **L23** (CI evidence for slice 1): the first head that had workflows registered,
+  `041cb251`, ended with `CI` run `41084525573` **completed/success** and
+  `Windows Hidden Internal Processes` `41084525698` **success**. On the current head
+  `dbdd3132`, `Windows` run `41085029408` is **success** and `CI` `41085029487` is still
+  queued, with 7 checks already passing (`verify`, `review-repository-windows`,
+  `review-routing-focused-windows`, `installer macos-latest`, `installer ubuntu-latest`,
+  `test ubuntu-24.04`, `test windows-latest`) and 2 pending (`installer
+  (windows-latest)`, `session-transport-macos`). PR #2 is `OPEN`, `MERGEABLE`,
+  `mergeStateStatus: CLEAN`. No green is claimed for a head whose `CI` run has not
+  finished.
